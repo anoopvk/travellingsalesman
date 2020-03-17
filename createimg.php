@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 $height = 500;
 $width = 1000;
 $image = imagecreate($width, $height);
@@ -18,15 +18,25 @@ for ($i = 0; $i < $numpoints; $i++) {
     imagefilledellipse($image,$x,$y,$dotsize,$dotsize,$white);
 }
 
+
+$dist=[];
+//draw line between points 
 for ($i = 0; $i < sizeof($vector["x"])-1; $i++) {
     imageline($image,  $vector["x"][$i], $vector["y"][$i], $vector["x"][$i+1], $vector["y"][$i+1], $white);
+    $dist[$i] = distcalc($vector["x"][$i], $vector["y"][$i], $vector["x"][$i+1], $vector["y"][$i+1]);
 
 }
 
 
 
-// header('Content-type: image/png');
 
+header('Content-type: image/png');
 imagepng($image);
 // imagepng($image,"images/captcha.png");
 imagedestroy($image);
+
+
+
+function distcalc($x1,$y1,$x2,$y2){
+   return sqrt(pow(($x1-$x2),2)+pow(($y1-$y2),2));
+}
