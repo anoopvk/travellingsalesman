@@ -8,6 +8,9 @@
 </head>
 
 <body>
+<?php
+include("createimg.php");
+?>
     <img src="../images/dot.png" id="a" alt="image">
     <img src="../images/shortestline.png" id="a" alt="image">
 

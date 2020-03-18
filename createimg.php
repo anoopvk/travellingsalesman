@@ -1,7 +1,7 @@
 <?php
 
 $height = 500;
-$width = 1000;
+$width = 500;
 $image = imagecreate($width, $height);
 $black = imagecolorallocate($image, 0, 0, 0);
 $white = imagecolorallocate($image, 255, 255, 255);
@@ -78,8 +78,8 @@ imagepng($image, "../images/shortestline.png");
 
 
 
-header('Content-type: image/png');
-imagepng($image);
+// header('Content-type: image/png');
+// imagepng($image);
 // imagepng($image,"images/captcha.png");
 imagedestroy($image);
 
