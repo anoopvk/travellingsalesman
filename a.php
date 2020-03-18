@@ -1,37 +1,19 @@
 <?php
 
-function nextorder($p){
 
-    $size = sizeof($p);
-    //finding x
-    $x = -1;
-    for ($i = 0; $i < $size - 1; $i++) {
-        if ($p[$i] < $p[$i + 1]) {
-            $x = $i;
-        }
-    }
-    if ($x == -1) {
-        return false;
-    }
-    //finding y
-    $y = -1;
-    for ($i = 0; $i < $size; $i++) {
-        if ($p[$x] < $p[$i]) {
-            $y = $i;
-        }
-    }
-    //swap values at x and y
-    $temp = $p[$x];
-    $p[$x] = $p[$y];
-    $p[$y] = $temp;
-    //reverse everything after x
-    reverse($p, $x + 1, $size);
-    return $p;
-}
+
+$a=[1,2,3,4,5,6,7,8,9];
+$a = reverse($a,4,9);
+print_r($a);
+
 
 function reverse($array, $start, $end)
 {
     $len = $end - $start;
+    // echo "<br> before<br>";
+    // for ($i = 0; $i < sizeof($array); $i++) {
+    //     echo $array[$i] . " ";
+    // }
     for ($i = 0; $i < $len / 2; $i++) {
         $temp = $array[$end - 1];
         $array[$end - 1] = $array[$start];
@@ -39,8 +21,11 @@ function reverse($array, $start, $end)
         $end--;
         $start++;
     }
+    return $array;
+    // echo "<br> after <br>";
+    // for ($i = 0; $i < sizeof($array); $i++) {
+    //     echo $array[$i] . " ";
+    // }
 }
-
-
 
 ?>

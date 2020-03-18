@@ -8,7 +8,9 @@
 </head>
 
 <body>
-    <img src="createimg.php" id="a" alt="image">
+    <img src="../images/dot.png" id="a" alt="image">
+    <img src="../images/shortestline.png" id="a" alt="image">
+
     <script>
 
         //repaint the image

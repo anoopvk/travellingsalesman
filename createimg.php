@@ -7,7 +7,7 @@ $black = imagecolorallocate($image, 0, 0, 0);
 $white = imagecolorallocate($image, 255, 255, 255);
 
 
-$numpoints = 5;
+$numpoints = 8;
 $dotsize = 7;
 //random x and y and draw dots
 for ($i = 0; $i < $numpoints; $i++) {
@@ -17,30 +17,63 @@ for ($i = 0; $i < $numpoints; $i++) {
     $vector["y"][$i] = $y;
     imagefilledellipse($image, $x, $y, $dotsize, $dotsize, $white);
 }
+imagepng($image, "../images/dot.png");
+
+// $vector["x"][2] = 0;
+// $vector["y"][2] = 0;
+// $vector["x"][1] = 3;
+// $vector["y"][1] = 4;
+// $vector["x"][0] = 6;
+// $vector["y"][0] = 8;
 
 
 //initial order
 for ($i = 0; $i < $numpoints; $i++) {
-    $order[$i]=$i;
+    $order[$i] = $i;
 }
 
 //calculate distance
 $dist = [];
-for ($i = 0; $i < sizeof($vector["x"]) - 1; $i++) {
-    $dist[$i] = distcalc($vector["x"][$i], $vector["y"][$i], $vector["x"][$i + 1], $vector["y"][$i + 1]);
+$shortestdist = 2000000000;
+$shortestorder = $order;
+while ($order) {
+
+    $totaldistance = 0;
+    for ($i = 0; $i < sizeof($vector["x"]) - 1; $i++) {
+        $dist[$i] = distcalc($vector["x"][$order[$i]], $vector["y"][$order[$i]], $vector["x"][$order[$i + 1]], $vector["y"][$order[$i + 1]]);
+        $totaldistance = $totaldistance + $dist[$i];
+    }
+    if ($totaldistance < $shortestdist) {
+        $shortestdist = $totaldistance;
+        // echo "<br>";
+        $shortestorder = $order;
+        // print_r($shortestorder);
+    }
+
+
+
+
+    // print_r($order);
+    // echo "<br>";
+    $order = nextorder($order);
+    if ($order == false) {
+        // echo "<br><b>finished</b><br>";
+    }
 }
 
 
 
-
-
-
+// draw line
+for ($i = 0; $i < sizeof($vector["x"]) - 1; $i++) {
+    imageline($image,  $vector["x"][$shortestorder[$i]], $vector["y"][$shortestorder[$i]], $vector["x"][$shortestorder[$i + 1]], $vector["y"][$shortestorder[$i + 1]], $white);
+}
+imagepng($image, "../images/shortestline.png");
 
 //draw line between points 
-for ($i = 0; $i < sizeof($vector["x"]) - 1; $i++) {
-    imageline($image,  $vector["x"][$i], $vector["y"][$i], $vector["x"][$i + 1], $vector["y"][$i + 1], $white);
-    imagepng($image, "images/" . $i . "line.png");
-}
+// for ($i = 0; $i < sizeof($vector["x"]) - 1; $i++) {
+// imageline($image,  $vector["x"][$i], $vector["y"][$i], $vector["x"][$i + 1], $vector["y"][$i + 1], $white);
+// imagepng($image, "images/" . $i . "line.png");
+// }
 
 
 
@@ -56,7 +89,8 @@ function distcalc($x1, $y1, $x2, $y2)
 {
     return sqrt(pow(($x1 - $x2), 2) + pow(($y1 - $y2), 2));
 }
-function nextorder($p){
+function nextorder($p)
+{
 
     $size = sizeof($p);
     //finding x
@@ -81,7 +115,7 @@ function nextorder($p){
     $p[$x] = $p[$y];
     $p[$y] = $temp;
     //reverse everything after x
-    reverse($p, $x + 1, $size);
+    $p = reverse($p, $x + 1, $size);
     return $p;
 }
 
@@ -95,4 +129,6 @@ function reverse($array, $start, $end)
         $end--;
         $start++;
     }
+    return $array;
+
 }

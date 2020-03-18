@@ -1,9 +1,9 @@
 <?php
-$a = [0, 1, 2, 3];
+$a = [0, 1, 2, 3, 4];
 
 
 
-for ($i = 0; $i < 4; $i++) {
+for ($i = 0; $i < 5; $i++) {
     echo $a[$i] . " ";
 }
 echo "<br>";
@@ -86,7 +86,7 @@ function nextorder($p){
 
 
     //reverse everything after x
-    reverse($p, $x + 1, $size);
+    $p = reverse($p, $x + 1, $size);
     echo "<br>";
 
     // print_r($p);
@@ -116,6 +116,7 @@ function reverse($array, $start, $end)
         $end--;
         $start++;
     }
+    return $array;
     // echo "<br> after <br>";
     // for ($i = 0; $i < sizeof($array); $i++) {
     //     echo $array[$i] . " ";
