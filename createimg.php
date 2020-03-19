@@ -1,4 +1,7 @@
 <?php
+set_time_limit(400);
+
+$start_time = microtime(true);
 
 $height = 500;
 $width = 500;
@@ -7,7 +10,7 @@ $black = imagecolorallocate($image, 0, 0, 0);
 $white = imagecolorallocate($image, 255, 255, 255);
 
 
-$numpoints = 8;
+$numpoints = 10;
 $dotsize = 7;
 //random x and y and draw dots
 for ($i = 0; $i < $numpoints; $i++) {
@@ -132,3 +135,11 @@ function reverse($array, $start, $end)
     return $array;
 
 }
+
+
+
+
+$end_time = microtime(true);
+$execution_time = ($end_time - $start_time);
+
+echo " Execution time = " . $execution_time . " sec";
