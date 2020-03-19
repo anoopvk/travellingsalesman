@@ -1,8 +1,6 @@
 <?php
-set_time_limit(400);
-
+set_time_limit(200);
 $start_time = microtime(true);
-
 $height = 500;
 $width = 500;
 $image = imagecreate($width, $height);
@@ -18,6 +16,7 @@ for ($i = 0; $i < $numpoints; $i++) {
     $y = rand(0, $height);
     $vector["x"][$i] = $x;
     $vector["y"][$i] = $y;
+    $order[$i] = $i;
     imagefilledellipse($image, $x, $y, $dotsize, $dotsize, $white);
 }
 imagepng($image, "../images/dot.png");
@@ -30,29 +29,29 @@ imagepng($image, "../images/dot.png");
 // $vector["y"][0] = 8;
 
 
-//initial order
-for ($i = 0; $i < $numpoints; $i++) {
-    $order[$i] = $i;
-}
 
+$GLOBALS["skip"] = false;
 //calculate distance
 $dist = [];
 $shortestdist = 2000000000;
 $shortestorder = $order;
 while ($order) {
+    if ($GLOBALS["skip"] == false) {
+        $totaldistance = 0;
+        for ($i = 0; $i < $numpoints - 1; $i++) {
+            $dist[$i] = distcalc($vector["x"][$order[$i]], $vector["y"][$order[$i]], $vector["x"][$order[$i + 1]], $vector["y"][$order[$i + 1]]);
+            $totaldistance = $totaldistance + $dist[$i];
+        }
+        $dist[$numpoints - 1] = distcalc($vector["x"][$order[0]], $vector["y"][$order[0]], $vector["x"][$order[$numpoints - 1]], $vector["y"][$order[$numpoints - 1]]);
+        $totaldistance = $totaldistance + $dist[$numpoints - 1];
+        if ($totaldistance < $shortestdist) {
+            $shortestdist = $totaldistance;
+            // echo "<br>";
 
-    $totaldistance = 0;
-    for ($i = 0; $i < sizeof($vector["x"]) - 1; $i++) {
-        $dist[$i] = distcalc($vector["x"][$order[$i]], $vector["y"][$order[$i]], $vector["x"][$order[$i + 1]], $vector["y"][$order[$i + 1]]);
-        $totaldistance = $totaldistance + $dist[$i];
+            $shortestorder = $order;
+            // print_r($shortestorder);
+        }
     }
-    if ($totaldistance < $shortestdist) {
-        $shortestdist = $totaldistance;
-        // echo "<br>";
-        $shortestorder = $order;
-        // print_r($shortestorder);
-    }
-
 
 
 
@@ -67,13 +66,15 @@ while ($order) {
 
 
 // draw line
-for ($i = 0; $i < sizeof($vector["x"]) - 1; $i++) {
+for ($i = 0; $i < $numpoints - 1; $i++) {
     imageline($image,  $vector["x"][$shortestorder[$i]], $vector["y"][$shortestorder[$i]], $vector["x"][$shortestorder[$i + 1]], $vector["y"][$shortestorder[$i + 1]], $white);
 }
+imageline($image,  $vector["x"][$shortestorder[0]], $vector["y"][$shortestorder[0]], $vector["x"][$shortestorder[$numpoints - 1]], $vector["y"][$shortestorder[$numpoints - 1]], $white);
+
 imagepng($image, "../images/shortestline.png");
 
 //draw line between points 
-// for ($i = 0; $i < sizeof($vector["x"]) - 1; $i++) {
+// for ($i = 0; $i < $numpoints - 1; $i++) {
 // imageline($image,  $vector["x"][$i], $vector["y"][$i], $vector["x"][$i + 1], $vector["y"][$i + 1], $white);
 // imagepng($image, "images/" . $i . "line.png");
 // }
@@ -119,7 +120,13 @@ function nextorder($p)
     $p[$y] = $temp;
     //reverse everything after x
     $p = reverse($p, $x + 1, $size);
-    return $p;
+    if ($p[0] < $p[$size - 1]) {
+        $GLOBALS["skip"] = false;
+        return $p;
+    } else {
+        $GLOBALS["skip"] = true;
+        return $p;
+    }
 }
 
 function reverse($array, $start, $end)
@@ -133,10 +140,7 @@ function reverse($array, $start, $end)
         $start++;
     }
     return $array;
-
 }
-
-
 
 
 $end_time = microtime(true);
